@@ -1,0 +1,27 @@
+from tensorflow.keras.preprocessing import image as kimage
+
+# Function to preprocess an image for prediction
+def preprocess_image_for_prediction(image_path):
+    img = tf.io.read_file(image_path)
+    img = tf.io.decode_jpeg(img, channels=3)
+    img = tf.image.resize(img, [224, 224], method="nearest")
+    img = kimage.img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    return img
+
+# Specify the path of the sample image you want to test
+sample_image_path = "/content/chest_xray/val/PNEUMONIA/person1946_bacteria_4874.jpeg"
+
+# Preprocess the image for prediction
+preprocessed_image = preprocess_image_for_prediction(sample_image_path)
+
+# Make a prediction using the loaded model
+prediction = loaded_model.predict(preprocessed_image)
+
+# Interpret the prediction
+predicted_class = "PNEUMONIA" if prediction[0][0] > 0.5 else "NORMAL"
+
+# Display the result
+print("Predicted Class:", predicted_class)
+plt.imshow(preprocessed_image[0].astype(np.uint8))
+plt.show()
